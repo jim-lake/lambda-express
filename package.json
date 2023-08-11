@@ -1,0 +1,28 @@
+{
+  "name": "lambda-express",
+  "version": "0.0.1",
+  "description": "",
+  "main": "src/index.js",
+  "files": [
+    "src/**/*"
+  ],
+  "scripts": {
+    "pretty": "prettier --write src test",
+    "lint": "eslint src"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/jim-lake/lambda-express.git"
+  },
+  "keywords": [
+    "lambda",
+    "express"
+  ],
+  "author": "github.com/jim-lake",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jim-lake/lambda-express/issues"
+  },
+  "homepage": "https://github.com/jim-lake/lambda-express#readme",
+  "dependencies": {}
+}
