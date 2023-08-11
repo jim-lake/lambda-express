@@ -1,7 +1,7 @@
 {
   "name": "lambda-mini-express",
-  "version": "0.0.1",
-  "description": "",
+  "version": "0.0.2",
+  "description": "Express for lamdba handlers",
   "main": "src/index.js",
   "files": [
     "src/**/*"
