@@ -1,9 +1,9 @@
-# lamda-express
+# lamda-mini-express
 
 Use like express, but with lambda.
 
 ```javascript
-const express = require('lambda_express');
+const express = require('lambda-mini-express');
 
 const app = express();
 
