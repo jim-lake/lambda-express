@@ -189,7 +189,7 @@ class LambdaExpress extends Router {
               next();
             } else if (err && callback.length === 4) {
               callback(err, req, res, next);
-            } else if (!err) {
+            } else if (!err && callback.length !== 4) {
               const params = _getMatch(req, match);
               if (params) {
                 req.params = params;

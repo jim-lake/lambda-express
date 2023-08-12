@@ -83,6 +83,11 @@ router2.all('/baz', (req, res) => {
   res.send({ route: 'subrouter2 /baz', uuid: crypto.randomUUID() });
 });
 
+app.use((err, req, res, next) => {
+  console.log('error handler:', err);
+  res.sendStatus(500);
+});
+
 if (process.env.REAL) {
   console.log('REAL');
   app.listen(process.env.PORT || 3001);
