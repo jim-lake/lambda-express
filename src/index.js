@@ -106,7 +106,7 @@ class LambdaExpress extends Router {
       const req = {
         app: this,
         baseUrl: event.requestContext?.http?.path,
-        body,
+        body: body || {},
         cookies: event.cookies ? _cookiesToMap(event.cookies) : {},
         fresh,
         host: event.requestContext?.domainName,
@@ -118,7 +118,7 @@ class LambdaExpress extends Router {
         params: {},
         path: event.requestContext?.http?.path,
         protocol: event.requestContext?.http?.protocol,
-        query: event.queryStringParameters,
+        query: event.queryStringParameters || {},
         route: {},
         secure: true,
         signedCookies: {},
