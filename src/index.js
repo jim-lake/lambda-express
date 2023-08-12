@@ -47,6 +47,9 @@ class Router {
   all(path, ...callbacks) {
     return this._addMiddleware(undefined, false, path, ...callbacks);
   }
+  get(path, ...callbacks) {
+    return this._addMiddleware('GET', false, path, ...callbacks);
+  }
   use(...callbacks) {
     return this._addMiddleware(undefined, true, ...callbacks);
   }

@@ -6,6 +6,10 @@ const app = express();
 const router = new express.Router();
 const router2 = new express.Router();
 
+app.set('foobar', 1);
+
+console.log('foobar:', app.get('foobar'));
+
 app.use((req, res, next) => {
   console.log('everything');
   next();
@@ -58,6 +62,11 @@ app.get('/err', (req, res, next) => {
 router.all('/foo', (req, res) => {
   console.log('subrouter /foo');
   res.send({ route: 'sub /foo', uuid: crypto.randomUUID() });
+});
+
+router.get('/fooget', (req, res) => {
+  console.log('subrouter /fooget');
+  res.send({ route: 'sub /fooget', uuid: crypto.randomUUID() });
 });
 
 router2.all('/baz2', (req, res) => {
