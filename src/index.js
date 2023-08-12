@@ -231,7 +231,6 @@ class LambdaExpress extends Router {
 function _getMatch(req, match) {
   let params = false;
   if (match === undefined) {
-    console.log();
     params = {};
   } else if (!match?.method || req.method === match.method) {
     const regex_match = req.path.match(match.regex);
