@@ -258,7 +258,7 @@ function _makeMatch(path_list, method, is_prefix) {
 }
 function _makeCombinedMatch(prefix_match, match) {
   const { source_list: prefix_source_list } = prefix_match || {};
-  const { method, is_prefix, source_list } = match || {};
+  const { method, source_list } = match || {};
   let path_list = [];
   if (prefix_source_list && source_list?.length > 0) {
     prefix_source_list.forEach((prefix) => {
@@ -271,6 +271,7 @@ function _makeCombinedMatch(prefix_match, match) {
   } else {
     path_list = source_list;
   }
+  const is_prefix = !match || match.is_prefix;
   return _makeMatch(path_list, method, is_prefix);
 }
 function _pathToRegexString(arg, is_prefix) {

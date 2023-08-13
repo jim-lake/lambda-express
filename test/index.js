@@ -3,6 +3,11 @@ const express = require('../src');
 
 const app = express();
 
+app.get('/favicon.ico', (req, res) => {
+  console.log('favicon');
+  res.sendStatus(404);
+});
+
 const router = new express.Router();
 const router2 = new express.Router();
 
@@ -57,6 +62,11 @@ app.get('/', (req, res) => {
 
 app.get('/err', (req, res, next) => {
   next(new Error('foo'));
+});
+
+router.use((req, res, next) => {
+  console.log('subrouter router middleware');
+  next();
 });
 
 router.all('/foo', (req, res) => {
