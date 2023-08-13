@@ -98,8 +98,8 @@ class LambdaExpress extends Router {
     const body = event.isBase64Encoded
       ? Buffer.from(event.body, 'base64')
       : event.body;
-    const fresh = event?.header?.['cache-control'] === 'no-cache';
-    const xhr = event?.header?.['x-requested-with'] === 'XMLHttpRequest';
+    const fresh = event.header?.['cache-control'] === 'no-cache';
+    const xhr = event.header?.['x-requested-with'] === 'XMLHttpRequest';
     return new Promise((resolve, reject) => {
       let statusCode = 200;
       const headers = {};
@@ -125,11 +125,19 @@ class LambdaExpress extends Router {
         stale: !fresh,
         subdomains: [],
         xhr,
-        accepts: () => true,
-        acceptsCharsets: () => true,
-        acceptsLanguages: () => true,
-        get: () => {},
-        is: () => {},
+        accepts: (val) => _headerMatch(event.header?.['accept'], val),
+        acceptsCharsets: (val) =>
+          _headerMatch(event.header?.['accept-charset'], val),
+        acceptsEncodings: (val) =>
+          _headerMatch(event.header?.['accept-encoding'], val),
+        acceptsLanguages: (val) =>
+          _headerMatch(event.header?.['accept-language'], val),
+        get: (name) => event.header?.[name],
+        is: (val) => {
+          return body
+            ? _headerMatch(event.header?.['content-type'], val)
+            : null;
+        },
         range: () => {},
       };
       const res = {
@@ -300,4 +308,7 @@ function _asyncForEach(list, callback, done) {
     }
   }
   _asyncNext();
+}
+function _headerMatch(value, check) {
+  return value?.indexOf?.(check) >= 0 ? check : false;
 }
