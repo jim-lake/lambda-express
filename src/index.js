@@ -279,7 +279,7 @@ function _pathToRegexString(arg, is_prefix) {
   if (arg instanceof RegExp) {
     ret = arg.source;
   } else {
-    const arg_params = arg.replace(/:([a-z0-9]*)/gi, '(?<$1>[^/]*)');
+    const arg_params = arg.replace(/:([_a-z0-9]*)/gi, '(?<$1>[^/]*)');
     ret = `^${arg_params}${is_prefix ? '' : '$'}`;
   }
   return ret;
