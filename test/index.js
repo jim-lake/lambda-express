@@ -3,6 +3,21 @@ const express = require('../src');
 
 const app = express();
 
+app.use((req, res, next) => {
+  console.log('use');
+  res.on('end', (result) => {
+    console.log('req.lamdbaEvent:', req.lamdbaEvent);
+    const delta = Date.now() - req.lamdbaEvent.requestContext.timeEpoch;
+    console.log(
+      'request done: time:',
+      delta + 'ms',
+      'size:',
+      result.body.length
+    );
+  });
+  next();
+});
+
 app.get('/favicon.ico', (req, res) => {
   console.log('favicon');
   res.sendStatus(404);

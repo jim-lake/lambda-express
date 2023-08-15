@@ -98,17 +98,19 @@ class LambdaExpress extends Router {
     const body = event.isBase64Encoded
       ? Buffer.from(event.body, 'base64')
       : event.body;
-    const fresh = event.header?.['cache-control'] === 'no-cache';
-    const xhr = event.header?.['x-requested-with'] === 'XMLHttpRequest';
+    const headers = event.headers || {};
+    const fresh = headers['cache-control'] === 'no-cache';
+    const xhr = headers['x-requested-with'] === 'XMLHttpRequest';
     return new Promise((resolve, reject) => {
       let statusCode = 200;
-      const headers = {};
+      const response_headers = {};
       const req = {
         app: this,
         baseUrl: event.requestContext?.http?.path,
         body: body || {},
         cookies: event.cookies ? _cookiesToMap(event.cookies) : {},
         fresh,
+        headers,
         host: event.requestContext?.domainName,
         hostname: event.requestContext?.domainName,
         ip: event.requestContext?.http?.sourceIp,
@@ -125,27 +127,32 @@ class LambdaExpress extends Router {
         stale: !fresh,
         subdomains: [],
         xhr,
-        accepts: (val) => _headerMatch(event.header?.['accept'], val),
-        acceptsCharsets: (val) =>
-          _headerMatch(event.header?.['accept-charset'], val),
+        lamdbaEvent: event,
+        accepts: (val) => _headerMatch(headers['accept'], val),
+        acceptsCharsets: (val) => _headerMatch(headers['accept-charset'], val),
         acceptsEncodings: (val) =>
-          _headerMatch(event.header?.['accept-encoding'], val),
+          _headerMatch(headers['accept-encoding'], val),
         acceptsLanguages: (val) =>
-          _headerMatch(event.header?.['accept-language'], val),
-        get: (name) => event.header?.[name],
-        is: (val) => {
-          return body
-            ? _headerMatch(event.header?.['content-type'], val)
-            : null;
-        },
+          _headerMatch(headers['accept-language'], val),
+        get: (name) => headers[name],
+        is: (val) => (body ? _headerMatch(headers['content-type'], val) : null),
         range: () => {},
       };
+      const _events = {};
       const res = {
+        on: (event_name, callback) => {
+          if (!_events[event_name]) {
+            _events[event_name] = [callback];
+          } else {
+            _events[event_name].push(callback);
+          }
+          return res;
+        },
         set: (field, value) => {
           if (typeof field === 'object') {
-            Object.assign(headers, field);
+            Object.assign(response_headers, field);
           } else {
-            headers[field] = value;
+            response_headers[field] = value;
           }
           return res;
         },
@@ -155,7 +162,7 @@ class LambdaExpress extends Router {
           statusCode = code;
           return res;
         },
-        send: (response_body) => {
+        end: (response_body) => {
           if (response_body === undefined || Buffer.isBuffer(response_body)) {
             // ???
           } else if (typeof response_body === 'object') {
@@ -163,19 +170,20 @@ class LambdaExpress extends Router {
           } else if (typeof body !== 'string') {
             response_body = String(response_body);
           }
-
-          resolve({
+          const result = {
             statusCode,
-            headers,
+            headers: response_headers,
             body: response_body,
-          });
+          };
+          resolve(result);
+          _events['end']?.forEach?.((cb) => cb(result));
           return res;
         },
-        end: (...args) => res.send(...args),
+        send: (...args) => res.end(...args),
         sendStatus: (status) => {
           statusCode = status;
           const response_body = messageMap[status] || String(status);
-          return res.send(response_body);
+          return res.end(response_body);
         },
       };
       let err;
