@@ -225,10 +225,7 @@ class LambdaExpress extends Router {
           if (err) {
             reject(err);
           } else {
-            resolve({
-              statusCode: 404,
-              body: 'Not Found',
-            });
+            res.sendStatus(404);
           }
         }
       );
