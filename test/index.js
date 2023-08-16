@@ -23,6 +23,10 @@ app.get('/favicon.ico', (req, res) => {
   res.sendStatus(404);
 });
 
+app.all('/empty', (req, res) => {
+  res.sendStatus(204);
+});
+
 const router = new express.Router();
 const router2 = new express.Router();
 

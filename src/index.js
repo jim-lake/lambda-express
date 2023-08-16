@@ -183,6 +183,9 @@ class LambdaExpress extends Router {
         sendStatus: (status) => {
           statusCode = status;
           const response_body = messageMap[status] || String(status);
+          if (response_body && !response_headers['content-type']) {
+            response_headers['content-type'] = 'text/plain';
+          }
           return res.end(response_body);
         },
       };
