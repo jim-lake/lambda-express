@@ -118,7 +118,7 @@ class LambdaExpress extends Router {
         method: event.requestContext?.http?.method,
         originalUrl: event.requestContext?.http?.path,
         params: {},
-        path: event.requestContext?.http?.path,
+        path: event.requestContext?.http?.path || '',
         protocol: event.requestContext?.http?.protocol,
         query: event.queryStringParameters || {},
         route: {},
