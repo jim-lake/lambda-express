@@ -127,7 +127,7 @@ class LambdaExpress extends Router {
         stale: !fresh,
         subdomains: [],
         xhr,
-        lamdbaEvent: event,
+        lambdaEvent: event,
         accepts: (val) => _headerMatch(headers['accept'], val),
         acceptsCharsets: (val) => _headerMatch(headers['accept-charset'], val),
         acceptsEncodings: (val) =>
